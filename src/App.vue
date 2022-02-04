@@ -15,5 +15,12 @@ export default {
 }
 </script>
 
-<style>
+<style type="scss">
+div#app:after {
+  content: url("~@/assets/img/splash-background-cropped.png");
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
 </style>
