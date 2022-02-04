@@ -5,6 +5,8 @@ import {
   applyPolyfills,
   defineCustomElements,
 } from '@aws-amplify/ui-components/loader';
+import 'bootstrap';
+import '@/assets/scss/custom.scss';
 
 Amplify.configure({
   Auth: {

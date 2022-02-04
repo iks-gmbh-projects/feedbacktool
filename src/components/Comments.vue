@@ -1,32 +1,60 @@
 <template>
-  <div v-cloak id="comments">
+  <div class="container" v-cloak id="comments">
     <div v-if="user && user.username">
-      <p>Logged in as user {{ user.username }}</p>
-      <button v-on:click.prevent="logout">Logout</button>
-      <h1>Latest comments</h1>
-      <table v-if="items" style="width: 25%; margin-left: auto; margin-right: auto;">
-        <tr>
-          <th>timestamp</th>
-          <th>name</th>
-          <th>message</th>
-        </tr>
-        <tr v-for="item in items" :key="item">
-          <td>{{formatDate(item.date)}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.message}}</td>
-        </tr>
-      </table>
-      <h1>New entry</h1>
-      <form>
-        <label for="name">My name</label><br>
-        <input id="name" ref="name" style="width:200px;"/>
-        <br><br>
-        <label for="message">My message</label><br>
-        <textarea id="message" ref="message" style="width:500px; height:200px;"></textarea>
-        <br><br>
-        <button v-on:click.prevent="postData">Submit</button>
+      <div class="row">
+        <div class="col">
+          <div class="float-end">
+            <img src="@/assets/img/person.svg" alt="Person">
+            <span class="me-3">{{ user.username }}</span>
+            <button class="btn btn-sm btn-outline-secondary" @click.prevent="logout">Logout</button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h1>New message</h1>
+        </div>
+      </div>
+      <form class="mb-5">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label><br>
+          <input id="name" class="form-control" v-model="name"/>
+        </div>
+
+        <div class="mb-3">
+          <label for="message" class="form-label">My message</label><br>
+          <textarea id="message" class="form-control" v-model="newMessage"></textarea>
+        </div>
+
+        <button class="btn btn-primary" @click.prevent="postData">Submit message</button>
+        <p v-if="error">Error: {{ error }}</p>
       </form>
-      <p v-if="error">Error: {{ error }}</p>
+
+      <div class="row" v-if="messages">
+        <div class="col">
+          <h1>Last submitted messages</h1>
+        </div>
+      </div>
+      <div class="row" v-if="messages">
+        <div class="col">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">timestamp</th>
+                <th scope="col">name</th>
+                <th scope="col">message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="message in messages" :key="message.date">
+                <td>{{formatDate(message.date)}}</td>
+                <td>{{message.name}}</td>
+                <td>{{message.message}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -34,14 +62,16 @@
 <script>
   const API_URL = "https://6qt340l8p3.execute-api.eu-central-1.amazonaws.com";
   import Amplify from 'aws-amplify';
+
   export default {
-    el: '#comments',
     name: 'Comments',
     data () {
       return {
         user: null,
-        items: null,
-        error: null
+        messages: null,
+        error: null,
+        name: "",
+        newMessage: ""
       }
     },
     created: function() {
@@ -72,7 +102,7 @@
         return result.data.Items.sort((a, b) => a.date < b.date && 1 || -1);
       },
       async getAllData() {
-        try {        
+        try {
           const res = await fetch(API_URL);
 
           if (!res.ok) {
@@ -86,15 +116,15 @@
             status: res.status + "-" + res.statusText,
             data: data,
           };
-          this.items = this.getSortedItemsFromResult(result);
+          this.messages = this.getSortedItemsFromResult(result);
         } catch (err) {
           this.error = err.message;
         }
       },
       async postData() {
         const postData = {
-          name: this.$refs.name.value,
-          message: this.$refs.message.value,
+          name: this.name,
+          message: this.newMessage,
         };
 
         try {
@@ -122,7 +152,7 @@
           await Amplify.Auth.federatedSignIn();
         }
       },
-      async showUser() {   
+      async showUser() {
         this.user = await Amplify.Auth.currentAuthenticatedUser();
       },
       async logout() {
@@ -133,10 +163,4 @@
 </script>
 
 <style>
-  table, th, td {
-    border: 1px solid black;
-  };
-  [v-cloak] {
-    display: none;
-  }
 </style>
