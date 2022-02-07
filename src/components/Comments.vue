@@ -153,7 +153,11 @@
         }
       },
       async showUser() {
-        this.user = await Amplify.Auth.currentAuthenticatedUser();
+        try {
+          this.user = await Amplify.Auth.currentAuthenticatedUser();
+        } catch (e) {
+          this.user = { username: 'Not logged in' };
+        }
       },
       async logout() {
         await Amplify.Auth.signOut();

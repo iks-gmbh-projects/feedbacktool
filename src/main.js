@@ -16,11 +16,17 @@ Amplify.configure({
     userPoolWebClientId: '6717f37h9q7klrqrnl5v90l92',
     oauth: {
       domain: 'comments-login.auth.eu-central-1.amazoncognito.com',
-      scope: ['phone', 'email', 'openid'],
-      redirectSignIn: 'https://comments-bucket-20220201.s3.eu-central-1.amazonaws.com/index.html',
-      redirectSignOut: 'https://comments-bucket-20220201.s3.eu-central-1.amazonaws.com/logout.html',
+      scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
+      redirectSignIn: 'https://d2kjzokq5ljamp.cloudfront.net/index.html',
+      redirectSignOut: 'https://d2kjzokq5ljamp.cloudfront.net/signout',
       responseType: 'code'
-    }
+    },
+    cookieStorage: {
+      domain: '.comments-login.auth.eu-central-1.amazoncognito.com',
+      secure: false,
+      path: '/',
+      expires: 365
+    },
   }
 });
 applyPolyfills().then(() => {
