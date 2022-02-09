@@ -103,7 +103,15 @@
       },
       async getAllData() {
         try {
-          const res = await fetch(API_URL);
+          const session = await Amplify.Auth.currentSession();
+          const token = session.idToken.jwtToken;
+
+          const res = await fetch(API_URL, {
+            method: "get",
+            headers: {
+              "Authorization": token
+            }
+          });
 
           if (!res.ok) {
             const message = `An error has occured: ${res.status} - ${res.statusText}`;
@@ -128,8 +136,14 @@
         };
 
         try {
+          const session = await Amplify.Auth.currentSession();
+          const token = session.idToken.jwtToken;
+
           const res = await fetch(API_URL, {
             method: "post",
+            headers: {
+              "Authorization": token
+            },
             body: JSON.stringify(postData)
           });
 
