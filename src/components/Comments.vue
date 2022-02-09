@@ -60,7 +60,6 @@
 </template>
 
 <script>
-  const API_URL = "https://6qt340l8p3.execute-api.eu-central-1.amazonaws.com";
   import Amplify from 'aws-amplify';
 
   export default {
@@ -106,7 +105,7 @@
           const session = await Amplify.Auth.currentSession();
           const token = session.idToken.jwtToken;
 
-          const res = await fetch(API_URL, {
+          const res = await fetch(this.$apiUrl, {
             method: "get",
             headers: {
               "Authorization": token
@@ -139,7 +138,7 @@
           const session = await Amplify.Auth.currentSession();
           const token = session.idToken.jwtToken;
 
-          const res = await fetch(API_URL, {
+          const res = await fetch(this.$apiUrl, {
             method: "post",
             headers: {
               "Authorization": token
