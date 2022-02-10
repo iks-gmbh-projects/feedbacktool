@@ -130,8 +130,9 @@
       },
       async postData() {
         const postData = {
+          username: this.user.username,
           name: this.name,
-          message: this.newMessage,
+          message: this.newMessage
         };
 
         try {
