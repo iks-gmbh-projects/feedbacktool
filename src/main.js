@@ -33,7 +33,7 @@ applyPolyfills().then(() => {
   defineCustomElements(window);
 });
 
-Vue.prototype.$apiUrl = "https://6qt340l8p3.execute-api.eu-central-1.amazonaws.com";
+Vue.prototype.$apiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
 
 Vue.config.productionTip = false
 
