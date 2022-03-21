@@ -1,10 +1,7 @@
-import Vue from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import Amplify from 'aws-amplify';
-import {
-  applyPolyfills,
-  defineCustomElements,
-} from '@aws-amplify/ui-components/loader';
+import {applyPolyfills, defineCustomElements,} from '@aws-amplify/ui-components/loader';
 import 'bootstrap';
 import '@/assets/scss/custom.scss';
 
@@ -33,10 +30,17 @@ applyPolyfills().then(() => {
   defineCustomElements(window);
 });
 
-Vue.prototype.$apiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
+const app = createApp(App);
 
-Vue.config.productionTip = false
+app.config.globalProperties.$apiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+app.use(function (req, res, next) {
+  res.setHeader(
+    'Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; frame-src 'self'"
+  );
+
+  next();
+});
+
+
+app.mount('#app');

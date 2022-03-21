@@ -1,16 +1,45 @@
 <template>
   <div id="app">
-    <comments/>
+    <app-header :user="user"></app-header>
+    <user-comments :user="user"/>
   </div>
 </template>
 
 <script>
-import Comments from './components/Comments.vue'
+import UserComments from './components/UserComments.vue';
+import AppHeader from './components/AppHeader.vue';
+import Amplify from "aws-amplify";
 
 export default {
   name: 'App',
   components: {
-    Comments
+    AppHeader,
+    UserComments
+  },
+  data() {
+    return {
+      user: null
+    }
+  },
+  mounted() {
+    this.login();
+    this.getUser();
+  },
+  methods: {
+    async login() {
+      try {
+        await Amplify.Auth.currentAuthenticatedUser();
+      } catch (e) {
+        await Amplify.Auth.federatedSignIn();
+      }
+    },
+    async getUser() {
+      try {
+        this.user = await Amplify.Auth.currentAuthenticatedUser();
+      } catch (e) {
+        this.user = {username: 'Not logged in'};
+      }
+    }
   }
 }
 </script>
@@ -19,8 +48,8 @@ export default {
 div#app:after {
   content: url("~@/assets/img/splash-background-cropped.png");
   position: fixed;
-  bottom: 0;
-  left: 0;
+  bottom: -7px;
+  left: -1px;
   z-index: -1;
 }
 </style>
