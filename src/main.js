@@ -1,7 +1,8 @@
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router'
 import Amplify from 'aws-amplify';
-import {applyPolyfills, defineCustomElements,} from '@aws-amplify/ui-components/loader';
+import { applyPolyfills, defineCustomElements } from '@aws-amplify/ui-components/loader';
 import 'bootstrap';
 import '@/assets/scss/custom.scss';
 
@@ -14,7 +15,7 @@ Amplify.configure({
     oauth: {
       domain: 'comments-login.auth.eu-central-1.amazoncognito.com',
       scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
-      redirectSignIn: 'https://d2kjzokq5ljamp.cloudfront.net/index.html',
+      redirectSignIn: 'https://d2kjzokq5ljamp.cloudfront.net',
       redirectSignOut: 'https://d2kjzokq5ljamp.cloudfront.net/signout',
       responseType: 'code'
     },
@@ -34,4 +35,4 @@ const app = createApp(App);
 
 app.config.globalProperties.$apiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
 
-app.mount('#app');
+app.use(router).mount('#app');

@@ -1,20 +1,18 @@
 <template>
   <div id="app">
-    <app-header :user="user"></app-header>
-    <user-comments :user="user"/>
+    <app-header :user="user"/>
+    <router-view :user="user"/>
   </div>
 </template>
 
 <script>
-import UserComments from './components/UserComments.vue';
 import AppHeader from './components/AppHeader.vue';
 import Amplify from "aws-amplify";
 
 export default {
   name: 'App',
   components: {
-    AppHeader,
-    UserComments
+    AppHeader
   },
   data() {
     return {
