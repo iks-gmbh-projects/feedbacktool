@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import Amplify from 'aws-amplify';
+import { format } from 'date-fns';
+import { getFromApi, postToApi } from '../common/http-service.js';
 
 export default {
   name: 'UserComments',
@@ -75,84 +76,31 @@ export default {
     }
   },
   methods: {
-    formatDate(unformattedDate) {
-      var date = new Date(unformattedDate);
-      var year = date.getFullYear();
-      var month = this.fillToAtLeastTwoDigits(date.getMonth() + 1);
-      var dayOfMonth = this.fillToAtLeastTwoDigits(date.getDate());
-      var hours = this.fillToAtLeastTwoDigits(date.getHours());
-      var minutes = this.fillToAtLeastTwoDigits(date.getMinutes());
-      var seconds = this.fillToAtLeastTwoDigits(date.getSeconds());
-      var millis = this.fillToAtLeastTwoDigits(date.getMilliseconds());
-      return year + "-" + month + "-" + dayOfMonth + " " + hours + ":" + minutes + ":" + seconds + "." + millis;
-    },
-    fillToAtLeastTwoDigits(str) {
-      var result = str;
-      while (("" + result).length < 2) {
-        result = "0" + result;
-      }
-      return result;
+    formatDate(dateNumeric) {
+      return format(new Date(dateNumeric), 'dd.MM.yyyy HH:mm:ss.SSS');
     },
     getSortedItemsFromResult(result) {
       return result.data.Items.sort((a, b) => a.date < b.date && 1 || -1);
     },
     async getAllData() {
-      try {
-        const session = await Amplify.Auth.currentSession();
-        const token = session.idToken.jwtToken;
-
-        const res = await fetch(this.$apiUrl, {
-          method: "get",
-          headers: {
-            "Authorization": token
-          }
-        });
-
-        if (!res.ok) {
-          const message = `An error has occurred: ${res.status} - ${res.statusText}`;
-          throw new Error(message);
-        }
-
-        const data = await res.json();
-
-        const result = {
-          status: res.status + "-" + res.statusText,
-          data: data,
-        };
+      var result = await getFromApi(this.$commentsApiUrl);
+      if (result.error != null) {
+        this.error = result.error;
+      } else {
         this.messages = this.getSortedItemsFromResult(result);
-      } catch (err) {
-        this.error = err.message;
       }
     },
     async postData() {
-      const postData = {
+      const data = {
         username: this.user.username,
         name: this.name,
         message: this.newMessage
       };
-
-      try {
-        const session = await Amplify.Auth.currentSession();
-        const token = session.idToken.jwtToken;
-
-        const res = await fetch(this.$apiUrl, {
-          method: "post",
-          headers: {
-            "Authorization": token
-          },
-          body: JSON.stringify(postData)
-        });
-
-        if (!res.ok) {
-          const msg = `An error has occurred: ${res.status} - ${res.statusText}`;
-          throw new Error(msg);
-        }
-
-        await res.json();
-
+      var result = await postToApi(this.$commentsApiUrl, data);
+      if (result.error != null) {
+        this.error = result.error;
+      } else {
         await this.getAllData();
-      } catch (err) {
-        this.error = err.message;
       }
     }
   }

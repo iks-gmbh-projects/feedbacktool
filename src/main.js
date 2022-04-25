@@ -33,6 +33,7 @@ applyPolyfills().then(() => {
 
 const app = createApp(App);
 
-app.config.globalProperties.$apiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
+app.config.globalProperties.$commentsApiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
+app.config.globalProperties.$eventsApiUrl = "https://j6btnslyj6.execute-api.eu-central-1.amazonaws.com/events";
 
 app.use(router).mount('#app');
