@@ -57,7 +57,7 @@ import { getFromApi, postToApi } from '../common/http-service.js';
 export default {
   name: 'UserComments',
   props: {
-    user: Object
+    loggedInUser: Object
   },
   data() {
     return {
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.user && this.user.username;
+      return this.loggedInUser && this.loggedInUser.username;
     }
   },
   methods: {
@@ -92,7 +92,7 @@ export default {
     },
     async postData() {
       const data = {
-        username: this.user.username,
+        username: this.loggedInUser.username,
         name: this.name,
         message: this.newMessage
       };

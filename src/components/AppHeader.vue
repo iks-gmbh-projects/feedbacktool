@@ -7,7 +7,7 @@
       <h1 class="me-auto">Feedbacktool</h1>
       <div class="ms-auto" v-if="loggedIn">
         <img :src="imgPath.person" alt="Person">
-        <span class="me-3">{{ user.username }}</span>
+        <span class="me-3">{{ loggedInUser.username }}</span>
         <button class="btn btn-sm btn-outline-secondary" @click="logout">Logout</button>
       </div>
     </div>
@@ -20,7 +20,7 @@ import Amplify from "aws-amplify";
 export default {
   name: "AppHeader",
   props: {
-    user: Object
+    loggedInUser: Object
   },
   data() {
     return {
@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.user && this.user.username
+      return this.loggedInUser && this.loggedInUser.username
     }
   },
   methods: {

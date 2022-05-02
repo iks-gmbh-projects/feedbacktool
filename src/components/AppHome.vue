@@ -12,7 +12,7 @@
 export default {
   name: 'AppHome',
   props: {
-    user: Object
+    loggedInUser: Object
   },
   data() {
     return {
@@ -22,10 +22,10 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.user && this.user.username;
+      return this.loggedInUser && this.loggedInUser.username;
     },
     isAdmin() {
-      const userGroups = this.user.signInUserSession.accessToken.payload["cognito:groups"];
+      const userGroups = this.loggedInUser.signInUserSession.accessToken.payload["cognito:groups"];
       if (userGroups != null) {
         return userGroups.includes('admin');
       }

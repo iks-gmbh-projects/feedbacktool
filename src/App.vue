@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <app-header :user="user"/>
-    <router-view :user="user"/>
+    <app-header :loggedInUser="loggedInUser"/>
+    <router-view :loggedInUser="loggedInUser"/>
   </div>
 </template>
 
@@ -16,12 +16,12 @@ export default {
   },
   data() {
     return {
-      user: null
+      loggedInUser: null
     }
   },
   mounted() {
     this.login();
-    this.getUser();
+    this.getLoggedInUser();
   },
   methods: {
     async login() {
@@ -31,11 +31,11 @@ export default {
         await Amplify.Auth.federatedSignIn();
       }
     },
-    async getUser() {
+    async getLoggedInUser() {
       try {
-        this.user = await Amplify.Auth.currentAuthenticatedUser();
+        this.loggedInUser = await Amplify.Auth.currentAuthenticatedUser();
       } catch (e) {
-        this.user = {username: 'Not logged in'};
+        this.loggedInUser = {username: 'Not logged in'};
       }
     }
   }
