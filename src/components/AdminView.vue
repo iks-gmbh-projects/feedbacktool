@@ -190,12 +190,12 @@ export default {
       }
     },
     isUserAssignedToEvent(user, event) {
-        for (let i = 0; i < event.users.length; i++) {
-          if (event.users[i].name === user.name) {
-            return true;
-          }
+      for (let i = 0; i < event.users.length; i++) {
+        if (event.users[i].name === user.name) {
+          return true;
         }
-        return false;
+      }
+      return false;
     },
     getSortedUserItemsFromResult(result) {
       return result.data.Users.sort((a, b) => a.name > b.name && 1 || -1);

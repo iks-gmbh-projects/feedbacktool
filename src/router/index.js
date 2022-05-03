@@ -13,6 +13,7 @@ const routes = [
     path: "/comments",
     name: "UserComments",
     component: UserComments,
+    props: route => ({ event: route.query.event })
   },
   {
     path: "/admin",
