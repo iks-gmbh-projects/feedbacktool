@@ -36,5 +36,6 @@ const app = createApp(App);
 app.config.globalProperties.$commentsApiUrl = "https://qq70namihf.execute-api.eu-central-1.amazonaws.com/comments";
 app.config.globalProperties.$eventsApiUrl = "https://j6btnslyj6.execute-api.eu-central-1.amazonaws.com/events";
 app.config.globalProperties.$usersApiUrl = "https://yotdgedne6.execute-api.eu-central-1.amazonaws.com/users";
+app.config.globalProperties.$sendmailApiUrl = "https://afjv0rqps3.execute-api.eu-central-1.amazonaws.com/sendmail";
 
 app.use(router).mount('#app');

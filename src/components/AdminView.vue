@@ -88,12 +88,15 @@
                 <tr>
                   <th scope="col">name</th>
                   <th scope="col">e-mail</th>
+                  <th scope="col">actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="user in users" :key="user.name">
                   <td>{{ user.name }}</td>
                   <td>{{ user.email }}</td>
+                  <td v-if="user.name == null || user.name !== mailSentToUser"><button class="btn btn-primary" @click.prevent="postSendmail(user.name)">Send (re)set-password e-mail</button></td>
+                  <td v-if="user.name === mailSentToUser">E-mail sent to user {{ mailSentToUser }}</td>
                 </tr>
               </tbody>
             </table>
@@ -128,7 +131,9 @@ export default {
       users: null,
       usersApiError: null,
       newUserName: "",
-      newUserEmail: ""
+      newUserEmail: "",
+      sendmailApiError: null,
+      mailSentToUser: null
     }
   },
   created: function () {
@@ -219,6 +224,17 @@ export default {
         this.usersApiError = result.error;
       } else {
         await this.getAllUsers();
+      }
+    },
+    async postSendmail(mailtargetUsername) {
+      const data = {
+        username: mailtargetUsername
+      };
+      var result = await postToApi(this.$sendmailApiUrl, data);
+      if (result.error != null) {
+        this.sendmailApiError = result.error;
+      } else {
+        this.mailSentToUser = mailtargetUsername;
       }
     }
   }
