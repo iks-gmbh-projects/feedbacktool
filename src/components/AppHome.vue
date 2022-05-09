@@ -1,8 +1,8 @@
 <template>
-  <div class="container" id="comments">
+  <div class="container" id="home">
     <div v-if="loggedIn">
       <h1>My events</h1>
-      <div class="row" v-if="events">
+      <div class="row" v-if="this.events != null && isLoggedInUserAssignedToAnyEvent()">
         <div class="col">
           <table class="table table-striped">
             <thead>
@@ -20,6 +20,7 @@
           </table>
         </div>
       </div>
+      <div v-if="this.events != null && !isLoggedInUserAssignedToAnyEvent()">You are currently not assigned to any events!</div>
       <div v-if="isAdmin"><br><router-link to="/admin">Go to Admin view</router-link></div>
     </div>
   </div>
@@ -63,8 +64,22 @@ export default {
       return result.data.Items.sort((a, b) => a.date < b.date && 1 || -1);
     },
     isLoggedInUserAssignedToEvent(event) {
+      if (event == null || event.users == null) {
+        return false;
+      }
       for (let i = 0; i < event.users.length; i++) {
         if (event.users[i].name === this.loggedInUser.username) {
+          return true;
+        }
+      }
+      return false;
+    },
+    isLoggedInUserAssignedToAnyEvent() {
+      if (this.events == null) {
+        return false;
+      }
+      for (let i = 0; i < this.events.length; i++) {
+        if (this.isLoggedInUserAssignedToEvent(this.events[i])) {
           return true;
         }
       }
